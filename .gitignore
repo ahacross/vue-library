@@ -1,0 +1,33 @@
+﻿# Dependencies
+node_modules/
+vendor/
+target/
+
+# Build outputs
+dist/
+dist-*/
+out/
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+
+# Environment & Secrets
+.env
+.env.local
+*.local
+credentials.json
+*.dat
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# OS temporary files
+.DS_Store
+Thumbs.db
