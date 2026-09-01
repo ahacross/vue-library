@@ -44,6 +44,12 @@ const props = withDefaults(
 
     // Permissions & Behaviors
     selectionFollowsFocus?: boolean
+    isMultiSelect?: boolean
+    isDraggable?: boolean | string | ((data: T) => boolean)
+    isDroppable?: boolean | string | ((args: { parentNode: NodeApi<T> | null; dragNodes: NodeApi<T>[]; index: number }) => boolean)
+    isEditable?: boolean | string | ((data: T) => boolean)
+
+    // Deprecated alias props for backward compatibility
     disableMultiSelection?: boolean
     disableDrag?: boolean | string | ((data: T) => boolean)
     disableDrop?: boolean | string | ((args: { parentNode: NodeApi<T> | null; dragNodes: NodeApi<T>[]; index: number }) => boolean)
@@ -74,10 +80,10 @@ const props = withDefaults(
     openByDefault: false,
     showCheckbox: false,
     selectionFollowsFocus: false,
-    disableMultiSelection: false,
-    disableDrag: false,
-    disableDrop: false,
-    disableEdit: false,
+    isMultiSelect: true,
+    isDraggable: true,
+    isDroppable: true,
+    isEditable: false,
     initialOpenIds: () => [],
     initialSelectedIds: () => [],
     initialCheckedIds: () => [],
@@ -122,6 +128,8 @@ const {
   initialSelectedIds: props.initialSelectedIds,
   initialCheckedIds: props.initialCheckedIds,
   selectionFollowsFocus: props.selectionFollowsFocus,
+  isMultiSelect: props.isMultiSelect,
+  isEditable: props.isEditable,
   disableMultiSelection: props.disableMultiSelection,
   disableEdit: props.disableEdit,
   searchMatch: props.searchMatch,
@@ -227,6 +235,8 @@ const {
   itemHeight: props.rowHeight,
   indent: props.indent,
   containerRef,
+  isDraggable: props.isDraggable,
+  isDroppable: props.isDroppable,
   disableDrag: props.disableDrag,
   disableDrop: props.disableDrop,
   onMove: (event) => emit('move', event)
@@ -383,7 +393,7 @@ defineExpose<TreeApi<T>>(treeApi)
           height: `${vItem.size}px`,
           transform: `translateY(${vItem.start}px)`
         }"
-        :draggable="!disableDrag"
+        :draggable="props.isDraggable !== false && !props.disableDrag"
         @dragstart="handleDragStart($event, visibleNodes[vItem.index], selectedIds)"
         @click="visibleNodes[vItem.index]?.select($event.metaKey || $event.ctrlKey, $event.shiftKey)"
       >

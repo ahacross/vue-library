@@ -22,6 +22,9 @@ export interface UseTreeOptions<T = any> {
   initialCheckedIds?: Id[]
   selection?: Ref<Id | undefined>
   selectionFollowsFocus?: boolean
+  isMultiSelect?: boolean
+  isEditable?: string | boolean | ((data: T) => boolean)
+  // Deprecated aliases
   disableMultiSelection?: boolean
   disableEdit?: string | boolean | ((data: T) => boolean)
   searchMatch?: (node: NodeApi<T>, searchTerm: string) => boolean
@@ -51,12 +54,16 @@ export function useTree<T = any>(options: UseTreeOptions<T>) {
     initialSelectedIds = [],
     initialCheckedIds = [],
     selectionFollowsFocus = false,
-    disableMultiSelection = false,
-    disableEdit = false,
+    isMultiSelect = true,
+    isEditable = false,
+    disableMultiSelection,
+    disableEdit,
     searchMatch,
     onRename,
     onDelete
   } = options
+
+  const allowMulti = isMultiSelect && !disableMultiSelection
 
   const isDefaultOpen = defaultOpenAll || openByDefault
   const openIds = shallowRef<Set<Id>>(new Set(initialOpenIds))
@@ -426,7 +433,7 @@ export function useTree<T = any>(options: UseTreeOptions<T>) {
 
   // Selection
   const select = (id: Id, multi = false, range = false) => {
-    if (disableMultiSelection) {
+    if (!allowMulti) {
       multi = false
       range = false
     }
@@ -466,7 +473,7 @@ export function useTree<T = any>(options: UseTreeOptions<T>) {
   }
 
   const selectAll = () => {
-    if (disableMultiSelection) return
+    if (!allowMulti) return
     const nodes = visibleNodes.value as unknown as NodeApi<T>[]
     nodes.forEach((n) => selectedIds.value.add(n.id))
     triggerRef(selectedIds)
@@ -565,14 +572,8 @@ export function useTree<T = any>(options: UseTreeOptions<T>) {
   }
 
   const checkAll = () => {
-    function collect(items: T[]) {
-      items.forEach((item) => {
-        checkedIds.value.add(getId(item))
-        const children = getChildren(item)
-        if (children) collect(children)
-      })
-    }
-    collect(data.value || [])
+    const nodes = visibleNodes.value as unknown as NodeApi<T>[]
+    nodes.forEach((n) => checkedIds.value.add(n.id))
     triggerRef(checkedIds)
   }
 
@@ -593,13 +594,8 @@ export function useTree<T = any>(options: UseTreeOptions<T>) {
   }
 
   const getCheckedNodes = (): NodeApi<T>[] => {
-    const result: NodeApi<T>[] = []
-    nodeMap.forEach((node) => {
-      if (isChecked(node.id)) {
-        result.push(node)
-      }
-    })
-    return result
+    const nodes = visibleNodes.value as unknown as NodeApi<T>[]
+    return nodes.filter((n) => isChecked(n.id))
   }
 
   const getCheckedData = (): T[] => {
@@ -615,13 +611,18 @@ export function useTree<T = any>(options: UseTreeOptions<T>) {
 
   // Edit / Rename
   const canEdit = (node: NodeApi<T>): boolean => {
-    if (typeof disableEdit === 'function') {
-      return !disableEdit(node.data)
+    if (disableEdit !== undefined) {
+      if (typeof disableEdit === 'function') return !disableEdit(node.data)
+      if (typeof disableEdit === 'string') return !(node.data as any)[disableEdit]
+      return !disableEdit
     }
-    if (typeof disableEdit === 'string') {
-      return !(node.data as any)[disableEdit]
+    if (typeof isEditable === 'function') {
+      return Boolean(isEditable(node.data))
     }
-    return !disableEdit
+    if (typeof isEditable === 'string') {
+      return Boolean((node.data as any)[isEditable])
+    }
+    return Boolean(isEditable)
   }
 
   const edit = (id: Id) => {

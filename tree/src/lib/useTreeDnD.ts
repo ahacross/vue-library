@@ -7,6 +7,9 @@ export interface UseTreeDnDOptions<T = any> {
   itemHeight: number
   indent: number
   containerRef: Ref<HTMLElement | null>
+  isDraggable?: boolean | string | ((data: T) => boolean)
+  isDroppable?: boolean | string | ((args: { parentNode: NodeApi<T> | null; dragNodes: NodeApi<T>[]; index: number }) => boolean)
+  // Deprecated aliases
   disableDrag?: boolean | string | ((data: T) => boolean)
   disableDrop?: boolean | string | ((args: { parentNode: NodeApi<T> | null; dragNodes: NodeApi<T>[]; index: number }) => boolean)
   onMove?: (event: MoveEvent<T>) => void
@@ -19,8 +22,10 @@ export function useTreeDnD<T = any>(options: UseTreeDnDOptions<T>) {
     itemHeight,
     indent,
     containerRef,
-    disableDrag = false,
-    disableDrop = false,
+    isDraggable = true,
+    isDroppable = true,
+    disableDrag,
+    disableDrop,
     onMove
   } = options
 
@@ -29,13 +34,18 @@ export function useTreeDnD<T = any>(options: UseTreeDnDOptions<T>) {
   const isDraggingOverTree = ref(false)
 
   const canDrag = (node: NodeApi<T>): boolean => {
-    if (typeof disableDrag === 'function') {
-      return !disableDrag(node.data)
+    if (disableDrag !== undefined) {
+      if (typeof disableDrag === 'function') return !disableDrag(node.data)
+      if (typeof disableDrag === 'string') return !(node.data as any)[disableDrag]
+      return !disableDrag
     }
-    if (typeof disableDrag === 'string') {
-      return !(node.data as any)[disableDrag]
+    if (typeof isDraggable === 'function') {
+      return Boolean(isDraggable(node.data))
     }
-    return !disableDrag
+    if (typeof isDraggable === 'string') {
+      return Boolean((node.data as any)[isDraggable])
+    }
+    return Boolean(isDraggable)
   }
 
   const handleDragStart = (e: DragEvent, node: NodeApi<T>, selectedIds: Set<Id>) => {
@@ -164,14 +174,22 @@ export function useTreeDnD<T = any>(options: UseTreeDnDOptions<T>) {
 
     if (isInvalid) return null
 
-    // Check custom disableDrop
-    if (disableDrop) {
-      const parentNode = parentId ? nodeMap.get(parentId) || null : null
+    // Check custom isDroppable / disableDrop
+    const parentNode = parentId ? nodeMap.get(parentId) || null : null
+    if (disableDrop !== undefined) {
       if (typeof disableDrop === 'function') {
         if (disableDrop({ parentNode, dragNodes: draggingNodes.value, index: dropIndex })) {
           return null
         }
-      } else {
+      } else if (disableDrop) {
+        return null
+      }
+    } else if (isDroppable !== undefined) {
+      if (typeof isDroppable === 'function') {
+        if (!isDroppable({ parentNode, dragNodes: draggingNodes.value, index: dropIndex })) {
+          return null
+        }
+      } else if (!isDroppable) {
         return null
       }
     }

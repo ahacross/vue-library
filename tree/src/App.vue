@@ -486,14 +486,17 @@ pnpm add vue-arborist</code></pre>
 
         <hr />
 
-        <h3>4. Props & Events 레퍼런스</h3>
+        <h3>4. Props 레퍼런스</h3>
+        <p><code>&lt;Tree /&gt;</code> 컴포넌트에 전달할 수 있는 속성(Props) 목록입니다.</p>
+
+        <h4 style="margin-top: 16px; color: #3b82f6;">① 데이터 및 접근자 (Data & Accessors)</h4>
         <div class="table-container">
           <table>
             <thead>
               <tr>
-                <th>Prop</th>
-                <th>타입</th>
-                <th>기본값</th>
+                <th style="width: 22%;">Prop</th>
+                <th style="width: 28%;">타입</th>
+                <th style="width: 15%;">기본값</th>
                 <th>설명</th>
               </tr>
             </thead>
@@ -501,39 +504,193 @@ pnpm add vue-arborist</code></pre>
               <tr>
                 <td><code>data</code></td>
                 <td><code>T[]</code></td>
-                <td><strong>필수</strong></td>
-                <td>계층형 트리 데이터 배열</td>
+                <td><span style="color: #ef4444; font-weight: bold;">필수</span></td>
+                <td>트리에 렌더링할 계층형 데이터 배열</td>
               </tr>
+              <tr>
+                <td><code>idAccessor</code></td>
+                <td><code>string | ((data: T) => Id)</code></td>
+                <td><code>'id'</code></td>
+                <td>각 노드의 고유 키(ID)를 식별하는 필드명 또는 추출 함수</td>
+              </tr>
+              <tr>
+                <td><code>childrenAccessor</code></td>
+                <td><code>string | ((data: T) => T[])</code></td>
+                <td><code>'children'</code></td>
+                <td>자식 노드 배열에 접근하는 필드명 또는 추출 함수</td>
+              </tr>
+              <tr>
+                <td><code>openAccessor</code></td>
+                <td><code>string | ((data: T) => boolean)</code></td>
+                <td><code>'isOpen'</code></td>
+                <td>데이터 객체 내에서 열림 상태를 읽어올 필드명 또는 함수</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 style="margin-top: 16px; color: #3b82f6;">② 크기 및 가상 스크롤 (Sizing & Virtual Scroll)</h4>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 22%;">Prop</th>
+                <th style="width: 28%;">타입</th>
+                <th style="width: 15%;">기본값</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
               <tr>
                 <td><code>width</code> / <code>height</code></td>
                 <td><code>number | string</code></td>
                 <td><code>'100%'</code></td>
-                <td>트리 컨테이너의 가로/세로 크기 (px 숫자 또는 CSS 단위 문자열)</td>
+                <td>트리 컨테이너의 가로 / 세로 크기 (px 숫자 또는 CSS 단위 문자열)</td>
               </tr>
               <tr>
                 <td><code>rowHeight</code></td>
                 <td><code>number</code></td>
                 <td><code>32</code></td>
-                <td>각 노드 행의 고유 높이(px) - 가상화 연산에 사용</td>
+                <td>각 노드 행의 고정 높이(px) - 가상 스크롤 렌더링 연산 기준</td>
               </tr>
               <tr>
                 <td><code>indent</code></td>
                 <td><code>number</code></td>
                 <td><code>20</code></td>
-                <td>레벨당 들여쓰기 픽셀</td>
-              </tr>
-              <tr>
-                <td><code>paddingTop</code> / <code>paddingBottom</code> / <code>padding</code></td>
-                <td><code>number</code></td>
-                <td><code>0</code></td>
-                <td>트리 내부 상하단 패딩 (px)</td>
+                <td>트리 깊이(Level)당 들여쓰기 픽셀</td>
               </tr>
               <tr>
                 <td><code>overscan</code></td>
                 <td><code>number</code></td>
                 <td><code>5</code></td>
-                <td>가상 스크롤 시 화면 밖 사전 렌더링 버퍼 개수</td>
+                <td>스크롤 시 뷰포트 위/아래에 미리 렌더링할 버퍼 노드 개수</td>
               </tr>
+              <tr>
+                <td><code>paddingTop</code> / <code>paddingBottom</code> / <code>padding</code></td>
+                <td><code>number</code></td>
+                <td><code>0</code></td>
+                <td>트리 내부 상/하단 여백 (px)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 style="margin-top: 16px; color: #3b82f6;">③ 초기 상태 및 선택/체크 (State & Selection)</h4>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 22%;">Prop</th>
+                <th style="width: 28%;">타입</th>
+                <th style="width: 15%;">기본값</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>showCheckbox</code></td>
+                <td><code>boolean</code></td>
+                <td><code>false</code></td>
+                <td>노드 좌측에 3상태(Checked/Indeterminate/Unchecked) 체크박스 활성화</td>
+              </tr>
+              <tr>
+                <td><code>defaultOpenAll</code></td>
+                <td><code>boolean</code></td>
+                <td><code>false</code></td>
+                <td>최초 렌더링 시 모든 폴더 노드를 펼쳐서 표시</td>
+              </tr>
+              <tr>
+                <td><code>openByDefault</code></td>
+                <td><code>boolean</code></td>
+                <td><code>false</code></td>
+                <td>신규 추가되거나 기본 상태일 때 노드들을 펼침 처리</td>
+              </tr>
+              <tr>
+                <td><code>initialOpenIds</code></td>
+                <td><code>Id[]</code></td>
+                <td><code>[]</code></td>
+                <td>초기에 펼쳐둘 노드 ID 목록</td>
+              </tr>
+              <tr>
+                <td><code>initialSelectedIds</code></td>
+                <td><code>Id[]</code></td>
+                <td><code>[]</code></td>
+                <td>초기에 선택해 둘 노드 ID 목록</td>
+              </tr>
+              <tr>
+                <td><code>initialCheckedIds</code></td>
+                <td><code>Id[]</code></td>
+                <td><code>[]</code></td>
+                <td>초기에 체크해 둘 노드 ID 목록</td>
+              </tr>
+              <tr>
+                <td><code>selection</code></td>
+                <td><code>Id</code></td>
+                <td><code>undefined</code></td>
+                <td>외부 상태와 단일 선택 동기화 (값이 변경되면 해당 노드로 자동 스크롤 및 선택)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 style="margin-top: 16px; color: #3b82f6;">④ 동작 및 권한 제어 (Permissions & Behaviors)</h4>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 22%;">Prop</th>
+                <th style="width: 28%;">타입</th>
+                <th style="width: 15%;">기본값</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>isMultiSelect</code></td>
+                <td><code>boolean</code></td>
+                <td><code>true</code></td>
+                <td>다중 선택(Shift/Ctrl 클릭) 활성화 여부 (단일 선택 모드 설정 시 <code>false</code> 지정)</td>
+              </tr>
+              <tr>
+                <td><code>isDraggable</code></td>
+                <td><code>boolean | string | ((data: T) => boolean)</code></td>
+                <td><code>true</code></td>
+                <td>드래그 시작 가능 여부 (전체 불가는 <code>false</code>, 조건부 설정은 함수/속성명)</td>
+              </tr>
+              <tr>
+                <td><code>isDroppable</code></td>
+                <td><code>boolean | string | Function</code></td>
+                <td><code>true</code></td>
+                <td>드롭 대상 허용 여부 (전체 불가는 <code>false</code>, 특정 부모/위치 제한 함수)</td>
+              </tr>
+              <tr>
+                <td><code>isEditable</code></td>
+                <td><code>boolean | string | ((data: T) => boolean)</code></td>
+                <td><code>false</code></td>
+                <td>인라인 이름 변경(F2/더블클릭) 활성화 여부 (기본값: false로 수정 불가. 수정 허용 시 <code>true</code> 지정)</td>
+              </tr>
+              <tr>
+                <td><code>selectionFollowsFocus</code></td>
+                <td><code>boolean</code></td>
+                <td><code>false</code></td>
+                <td>방향키 포커스 이동 시 선택(Selection)도 자동으로 함께 동기화</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 style="margin-top: 16px; color: #3b82f6;">⑤ 검색 및 스타일 (Search & Style)</h4>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 22%;">Prop</th>
+                <th style="width: 28%;">타입</th>
+                <th style="width: 15%;">기본값</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
               <tr>
                 <td><code>searchTerm</code></td>
                 <td><code>string</code></td>
@@ -542,81 +699,191 @@ pnpm add vue-arborist</code></pre>
               </tr>
               <tr>
                 <td><code>searchMatch</code></td>
-                <td><code>(node, term) =&gt; boolean</code></td>
+                <td><code>(node, term) => boolean</code></td>
                 <td><code>undefined</code></td>
-                <td>커스텀 검색 매칭 함수 (지정하지 않을 경우 JSON loose matching)</td>
+                <td>커스텀 검색 매칭 함수 (지정하지 않을 경우 이름 및 속성 loose match)</td>
               </tr>
               <tr>
-                <td><code>defaultOpenAll</code> / <code>openByDefault</code></td>
-                <td><code>boolean</code></td>
-                <td><code>false</code></td>
-                <td>초기 로드 시 모든 폴더를 펼친 상태로 표시</td>
+                <td><code>searchDebounce</code></td>
+                <td><code>number</code></td>
+                <td><code>250</code></td>
+                <td>검색어 입력 디바운스 지연 시간 (ms)</td>
               </tr>
               <tr>
-                <td><code>showCheckbox</code></td>
-                <td><code>boolean</code></td>
-                <td><code>false</code></td>
-                <td>체크박스 표시 활성화 (부모-자식 연동 및 반선택 Indeterminate 자동 지원)</td>
-              </tr>
-              <tr>
-                <td><code>selection</code></td>
-                <td><code>Id</code></td>
-                <td><code>undefined</code></td>
-                <td>외부 상태와 선택 동기화 (값이 바뀌면 해당 노드로 자동 스크롤 및 선택)</td>
-              </tr>
-              <tr>
-                <td><code>selectionFollowsFocus</code></td>
-                <td><code>boolean</code></td>
-                <td><code>false</code></td>
-                <td>방향키 포커스 이동 시 자동으로 선택(Selection)도 함께 동기화</td>
-              </tr>
-              <tr>
-                <td><code>disableMultiSelection</code></td>
-                <td><code>boolean</code></td>
-                <td><code>false</code></td>
-                <td>Shift/Ctrl 다중 선택 비활성화 (단일 선택 모드 강제)</td>
-              </tr>
-              <tr>
-                <td><code>disableDrag</code></td>
-                <td><code>boolean | string | ((data: T) =&gt; boolean)</code></td>
-                <td><code>false</code></td>
-                <td>특정 노드 또는 전체 드래그 비활성화 (속성명 또는 함수)</td>
-              </tr>
-              <tr>
-                <td><code>disableDrop</code></td>
-                <td><code>boolean | string | Function</code></td>
-                <td><code>false</code></td>
-                <td>특정 노드로의 드롭 비활성화</td>
-              </tr>
-              <tr>
-                <td><code>disableEdit</code></td>
-                <td><code>boolean | string | ((data: T) =&gt; boolean)</code></td>
-                <td><code>false</code></td>
-                <td>특정 노드의 인라인 이름 변경(F2) 비활성화</td>
-              </tr>
-              <tr>
-                <td><code>className</code> / <code>rowClassName</code></td>
-                <td><code>string | ((node) =&gt; string)</code></td>
+                <td><code>className</code></td>
+                <td><code>string</code></td>
                 <td><code>''</code></td>
-                <td>트리 컨테이너 및 각 행 노드에 적용할 커스텀 CSS 클래스</td>
+                <td>트리 최상위 컨테이너에 적용할 커스텀 CSS 클래스</td>
               </tr>
               <tr>
-                <td><code>idAccessor</code></td>
-                <td><code>string | Function</code></td>
-                <td><code>'id'</code></td>
-                <td>커스텀 ID 속성명 지정 (예: <code>_id</code>, <code>uuid</code>)</td>
+                <td><code>rowClassName</code></td>
+                <td><code>string | ((node) => string)</code></td>
+                <td><code>''</code></td>
+                <td>각 행 노드 엘리먼트에 동적으로 적용할 CSS 클래스</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr />
+
+        <h3>5. Events 레퍼런스</h3>
+        <p><code>&lt;Tree /&gt;</code> 컴포넌트에서 <code>@이벤트명</code>으로 바인딩할 수 있는 이벤트 목록입니다.</p>
+
+        <h4 style="margin-top: 16px; color: #10b981;">① 선택 및 상태 변경 이벤트</h4>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 22%;">Event</th>
+                <th style="width: 38%;">인자 (Payload)</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>@select</code></td>
+                <td><code>nodes: NodeApi&lt;T&gt;[]</code></td>
+                <td>노드 선택 상태가 변경되었을 때 현재 선택된 노드 인스턴스 배열 전달</td>
               </tr>
               <tr>
-                <td><code>childrenAccessor</code></td>
-                <td><code>string | Function</code></td>
-                <td><code>'children'</code></td>
-                <td>커스텀 자식 노드 배열 속성명 지정 (예: <code>subItems</code>)</td>
+                <td><code>@check</code></td>
+                <td><code>{ checkedNodes: NodeApi&lt;T&gt;[]; checkedData: T[] }</code></td>
+                <td>체크박스 상태가 변경되었을 때 체크된 노드 및 원본 데이터 배열 전달</td>
               </tr>
               <tr>
-                <td><code>openAccessor</code></td>
-                <td><code>string | Function</code></td>
-                <td><code>'isOpen'</code></td>
-                <td>데이터 객체 자체의 열림 상태 플래그 속성명</td>
+                <td><code>@activate</code></td>
+                <td><code>node: NodeApi&lt;T&gt;</code></td>
+                <td>노드에서 <code>Enter</code> 키를 눌러 실행/활성화했을 때 발생</td>
+              </tr>
+              <tr>
+                <td><code>@focus</code></td>
+                <td><code>node: NodeApi&lt;T&gt;</code></td>
+                <td>방향키 또는 클릭으로 포커스가 특정 노드로 이동했을 때 발생</td>
+              </tr>
+              <tr>
+                <td><code>@toggle</code></td>
+                <td><code>id: Id</code></td>
+                <td>폴더 노드가 열리거나 닫힐 때 발생 (토글된 노드 ID 전달)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 style="margin-top: 16px; color: #10b981;">② 데이터 조작 이벤트 (DnD / 수정 / 삭제)</h4>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 22%;">Event</th>
+                <th style="width: 38%;">인자 (Payload)</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>@move</code></td>
+                <td><code>event: MoveEvent&lt;T&gt;</code></td>
+                <td>드래그 앤 드롭 이동 완료 시 발생 (<code>dragNodes</code>, <code>parentId</code>, <code>index</code> 등 전달)</td>
+              </tr>
+              <tr>
+                <td><code>@rename</code></td>
+                <td><code>event: RenameEvent&lt;T&gt;</code></td>
+                <td><code>F2</code> 또는 인라인 편집 후 새 이름 확정 시 발생 (<code>{ id, name, node }</code>)</td>
+              </tr>
+              <tr>
+                <td><code>@delete</code></td>
+                <td><code>event: DeleteEvent&lt;T&gt;</code></td>
+                <td><code>Delete</code>/<code>Backspace</code> 키로 선택 노드 삭제 요청 시 발생 (<code>{ ids, nodes }</code>)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 style="margin-top: 16px; color: #10b981;">③ DOM & 스크롤 이벤트</h4>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 22%;">Event</th>
+                <th style="width: 38%;">인자 (Payload)</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>@scroll</code></td>
+                <td><code>{ scrollTop: number; scrollLeft: number }</code></td>
+                <td>트리 내부 영역 스크롤 발생 시 전달</td>
+              </tr>
+              <tr>
+                <td><code>@click</code></td>
+                <td><code>event: MouseEvent</code></td>
+                <td>트리 컨테이너 클릭 이벤트</td>
+              </tr>
+              <tr>
+                <td><code>@contextmenu</code></td>
+                <td><code>event: MouseEvent</code></td>
+                <td>트리 컨테이너 우클릭 이벤트 (커스텀 컨텍스트 메뉴 연동용)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr />
+
+        <h3>6. 인스턴스 메서드 API (<code>treeRef</code>)</h3>
+        <p><code>&lt;Tree ref="treeRef" /&gt;</code> 형태로 바인딩하여 트리 컨트롤을 프로그래밍 방식으로 조작할 수 있습니다.</p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 30%;">메서드</th>
+                <th style="width: 25%;">반환 타입</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>getSelectedNodes()</code></td>
+                <td><code>NodeApi&lt;T&gt;[]</code></td>
+                <td>현재 선택된 노드 인스턴스 목록 반환</td>
+              </tr>
+              <tr>
+                <td><code>getSelectedData()</code></td>
+                <td><code>T[]</code></td>
+                <td>현재 선택된 원본 데이터 객체 목록 반환</td>
+              </tr>
+              <tr>
+                <td><code>getCheckedNodes()</code></td>
+                <td><code>NodeApi&lt;T&gt;[]</code></td>
+                <td>현재 체크박스가 선택된 노드 인스턴스 목록 반환</td>
+              </tr>
+              <tr>
+                <td><code>getCheckedData()</code></td>
+                <td><code>T[]</code></td>
+                <td>현재 체크박스가 선택된 원본 데이터 객체 목록 반환</td>
+              </tr>
+              <tr>
+                <td><code>openAll()</code> / <code>closeAll()</code></td>
+                <td><code>void</code></td>
+                <td>모든 폴더 노드 일괄 열기 / 닫기</td>
+              </tr>
+              <tr>
+                <td><code>checkAll()</code> / <code>uncheckAll()</code></td>
+                <td><code>void</code></td>
+                <td>모든 체크박스 일괄 체크 / 체크 해제</td>
+              </tr>
+              <tr>
+                <td><code>scrollTo(id, align?)</code></td>
+                <td><code>void</code></td>
+                <td>특정 노드로 가상 스크롤 이동 (<code>'auto' | 'center' | 'start' | 'end'</code>)</td>
+              </tr>
+              <tr>
+                <td><code>setSearchTerm(term)</code></td>
+                <td><code>void</code></td>
+                <td>검색어 프로그래밍 방식 설정 및 필터링</td>
               </tr>
             </tbody>
           </table>
