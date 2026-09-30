@@ -1,0 +1,14 @@
+{
+  "name": "@novagrid/vue",
+  "version": "1.0.0",
+  "description": "Vue 3 Component for NovaCanvasGrid",
+  "main": "index.js",
+  "keywords": ["vue", "canvas", "grid", "wasm", "opfs"],
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "dependencies": {
+    "@novagrid/core": "^1.0.0"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "@novagrid/core",
+  "version": "1.0.0",
+  "description": "Unified 2D Canvas Grid with Rust WebAssembly and OPFS Storage",
+  "main": "index.js",
+  "keywords": ["canvas", "grid", "wasm", "opfs", "virtual-scroll"],
+  "license": "MIT"
+}

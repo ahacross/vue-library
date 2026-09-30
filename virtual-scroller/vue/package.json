@@ -1,0 +1,14 @@
+{
+  "name": "@wasm-virtual/vue",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@wasm-virtual/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": "^3.3.0"
+  }
+}

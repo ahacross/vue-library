@@ -1,0 +1,574 @@
+/**
+ * Vue Hyper Grid - Styles
+ * Modern Enterprise Design inspired by ag-grid Alpine & Quartz
+ */
+
+html, body, #app {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+:root {
+  --hg-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --hg-font-size: 13px;
+  --hg-bg-color: #ffffff;
+  --hg-header-bg: #f8fafc;
+  --hg-border-color: #e2e8f0;
+  --hg-row-hover-bg: #f1f5f9;
+  --hg-row-selected-bg: #e0f2fe;
+  --hg-row-selected-hover-bg: #bae6fd;
+  --hg-row-even-bg: #ffffff;
+  --hg-row-odd-bg: #fafbfc;
+  --hg-text-color: #1e293b;
+  --hg-header-color: #475569;
+  --hg-primary-color: #2563eb;
+  --hg-accent-color: #3b82f6;
+  --hg-pinned-shadow: 2px 0 6px -2px rgba(0, 0, 0, 0.12);
+  --hg-pinned-right-shadow: -2px 0 6px -2px rgba(0, 0, 0, 0.12);
+  --hg-status-bg: #f8fafc;
+  --hg-status-border: #e2e8f0;
+}
+
+.hyper-grid-theme-dark {
+  --hg-bg-color: #0f172a;
+  --hg-header-bg: #1e293b;
+  --hg-border-color: #334155;
+  --hg-row-hover-bg: #1e293b;
+  --hg-row-selected-bg: #0369a1;
+  --hg-row-selected-hover-bg: #0284c7;
+  --hg-row-even-bg: #0f172a;
+  --hg-row-odd-bg: #131d33;
+  --hg-text-color: #f1f5f9;
+  --hg-header-color: #94a3b8;
+  --hg-primary-color: #38bdf8;
+  --hg-accent-color: #60a5fa;
+  --hg-pinned-shadow: 2px 0 8px -2px rgba(0, 0, 0, 0.5);
+  --hg-pinned-right-shadow: -2px 0 8px -2px rgba(0, 0, 0, 0.5);
+  --hg-status-bg: #1e293b;
+  --hg-status-border: #334155;
+}
+
+.hyper-grid {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: var(--hg-bg-color);
+  color: var(--hg-text-color);
+  font-family: var(--hg-font-family);
+  font-size: var(--hg-font-size);
+  border: 1px solid var(--hg-border-color);
+  border-radius: 6px;
+  overflow: hidden;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+/* Header Container */
+.hyper-grid-header {
+  display: flex;
+  background-color: var(--hg-header-bg);
+  border-bottom: 1px solid var(--hg-border-color);
+  font-weight: 600;
+  color: var(--hg-header-color);
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.hyper-grid-header-pinned-left,
+.hyper-grid-header-pinned-right {
+  display: flex;
+  flex-shrink: 0;
+  z-index: 12;
+  background-color: var(--hg-header-bg);
+}
+
+.hyper-grid-header-pinned-left {
+  box-shadow: var(--hg-pinned-shadow);
+}
+
+.hyper-grid-header-pinned-right {
+  box-shadow: var(--hg-pinned-right-shadow);
+}
+
+.hyper-grid-header-scroll-container {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.hyper-grid-header-cell {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 0 12px;
+  border-right: 1px solid var(--hg-border-color);
+  box-sizing: border-box;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.hyper-grid-header-cell:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.hyper-grid-theme-dark .hyper-grid-header-cell:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.hyper-grid-header-title {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hyper-grid-sort-icon {
+  margin-left: 6px;
+  display: inline-flex;
+  font-size: 11px;
+  color: var(--hg-primary-color);
+}
+
+.hyper-grid-col-resizer {
+  position: absolute;
+  right: -3px;
+  top: 0;
+  bottom: 0;
+  width: 7px;
+  cursor: col-resize;
+  z-index: 15;
+}
+
+.hyper-grid-col-resizer:hover,
+.hyper-grid-col-resizer.is-resizing {
+  background-color: var(--hg-primary-color);
+}
+
+/* Body & Virtual Scroller */
+.hyper-grid-viewport {
+  position: relative;
+  flex-grow: 1;
+  overflow: auto;
+  outline: none;
+  contain: strict;
+}
+
+.hyper-grid-scroll-spacer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.hyper-grid-rows-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: auto;
+  will-change: transform;
+}
+
+/* Row & Cell */
+.hyper-grid-row {
+  display: flex;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--hg-border-color);
+  transition: background-color 0.05s ease;
+}
+
+.hyper-grid-row-even {
+  background-color: var(--hg-row-even-bg);
+}
+
+.hyper-grid-row-odd {
+  background-color: var(--hg-row-odd-bg);
+}
+
+.hyper-grid-row:hover {
+  background-color: var(--hg-row-hover-bg) !important;
+}
+
+.hyper-grid-row.is-selected {
+  background-color: var(--hg-row-selected-bg) !important;
+}
+
+.hyper-grid-row.is-selected:hover {
+  background-color: var(--hg-row-selected-hover-bg) !important;
+}
+
+.hyper-grid-cell {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 12px;
+  box-sizing: border-box;
+  border-right: 1px solid var(--hg-border-color);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+}
+
+.hyper-grid-col-spacer {
+  height: 100%;
+  pointer-events: none;
+  flex-shrink: 0;
+  visibility: hidden;
+}
+
+.hyper-grid-cell-pinned-left,
+.hyper-grid-cell-pinned-right {
+  position: sticky;
+  z-index: 5;
+  background-color: var(--hg-row-bg, #ffffff);
+}
+
+.hyper-grid-row-even .hyper-grid-cell-pinned-left,
+.hyper-grid-row-even .hyper-grid-cell-pinned-right {
+  background-color: var(--hg-row-even-bg, #ffffff);
+}
+
+.hyper-grid-row-odd .hyper-grid-cell-pinned-left,
+.hyper-grid-row-odd .hyper-grid-cell-pinned-right {
+  background-color: var(--hg-row-odd-bg, #f8fafc);
+}
+
+.hyper-grid-row:hover .hyper-grid-cell-pinned-left,
+.hyper-grid-row:hover .hyper-grid-cell-pinned-right {
+  background-color: var(--hg-row-hover-bg, #f1f5f9);
+}
+
+.hyper-grid-row.is-selected .hyper-grid-cell-pinned-left,
+.hyper-grid-row.is-selected .hyper-grid-cell-pinned-right {
+  background-color: var(--hg-row-selected-bg, #e0e7ff) !important;
+}
+
+.hyper-grid-row.is-selected:hover .hyper-grid-cell-pinned-left,
+.hyper-grid-row.is-selected:hover .hyper-grid-cell-pinned-right {
+  background-color: var(--hg-row-selected-hover-bg, #c7d2fe) !important;
+}
+
+.hyper-grid-cell-pinned-left {
+  box-shadow: var(--hg-pinned-shadow);
+}
+
+.hyper-grid-cell-pinned-right {
+  box-shadow: var(--hg-pinned-right-shadow);
+}
+
+/* Status Bar & Performance HUD */
+.hyper-grid-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px;
+  background-color: var(--hg-status-bg);
+  border-top: 1px solid var(--hg-status-border);
+  font-size: 12px;
+  color: var(--hg-header-color);
+}
+
+.hyper-grid-status-left,
+.hyper-grid-status-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.hyper-grid-metric-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--hg-primary-color);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+/* Checkbox */
+.hyper-grid-checkbox {
+  cursor: pointer;
+  accent-color: var(--hg-primary-color);
+  width: 15px;
+  height: 15px;
+  margin: 0;
+}
+
+/* Loading Overlay */
+.hyper-grid-loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.hyper-grid-theme-dark .hyper-grid-loading-overlay {
+  background: rgba(15, 23, 42, 0.75);
+}
+
+.hyper-grid-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(37, 99, 235, 0.2);
+  border-top-color: var(--hg-primary-color);
+  border-radius: 50%;
+  animation: hg-spin 0.7s linear infinite;
+}
+
+@keyframes hg-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 2. 데이터 없음 / 검색 결과 없음 오버레이 */
+.hyper-grid-empty-overlay {
+  position: absolute;
+  inset: 40px 0 32px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  pointer-events: none;
+  background: transparent;
+}
+
+.empty-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 36px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--hg-border-color);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+  pointer-events: auto;
+  text-align: center;
+}
+
+.hyper-grid-theme-dark .empty-content {
+  background: rgba(15, 23, 42, 0.9);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+}
+
+.empty-icon {
+  font-size: 38px;
+  line-height: 1;
+}
+
+.empty-text {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--hg-text-color);
+}
+
+.empty-subtext {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* --- 엔터프라이즈 기능 스타일 --- */
+
+/* 1. 행 그룹핑 (Row Grouping) */
+.hyper-grid-group-row {
+  background: #f1f5f9 !important;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--hg-border-color);
+  user-select: none;
+  z-index: 5;
+}
+
+.hyper-grid-theme-dark .hyper-grid-group-row {
+  background: #1e293b !important;
+}
+
+.hyper-grid-group-row:hover {
+  background: #e2e8f0 !important;
+}
+
+.hyper-grid-theme-dark .hyper-grid-group-row:hover {
+  background: #334155 !important;
+}
+
+.group-toggle-icon {
+  font-size: 10px;
+  color: #64748b;
+  margin-right: 8px;
+  display: inline-block;
+  width: 14px;
+}
+
+.group-title-badge {
+  font-size: 11px;
+  color: #64748b;
+  margin-right: 4px;
+}
+
+.group-value-text {
+  font-size: 13px;
+  color: #1e293b;
+  margin-right: 6px;
+}
+
+.hyper-grid-theme-dark .group-value-text {
+  color: #f1f5f9;
+}
+
+.group-item-count {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-right: 16px;
+}
+
+.group-agg-badges {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.agg-badge {
+  font-size: 11px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #334155;
+  font-weight: 500;
+}
+
+.hyper-grid-theme-dark .agg-badge {
+  background: #0f172a;
+  border-color: #475569;
+  color: #cbd5e1;
+}
+
+/* 2. 셀 범위 선택 (Range Selection) */
+.hyper-grid-cell.is-cell-selected {
+  background-color: rgba(37, 99, 235, 0.15) !important;
+  outline: 1px solid #2563eb !important;
+  outline-offset: -1px;
+}
+
+.hyper-grid-theme-dark .hyper-grid-cell.is-cell-selected {
+  background-color: rgba(56, 189, 248, 0.22) !important;
+  outline: 1px solid #38bdf8 !important;
+}
+
+/* 3. 전체 데이터 엑셀/CSV 내보내기 진행 모달 */
+.hyper-grid-export-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.hyper-grid-export-modal {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 24px 32px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 340px;
+  max-width: 440px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+}
+
+.hyper-grid-theme-dark .hyper-grid-export-modal {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+.export-spinner {
+  width: 36px;
+  height: 36px;
+  border: 4px solid rgba(37, 99, 235, 0.2);
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: hyper-grid-spin 0.8s linear infinite;
+  margin-bottom: 12px;
+}
+
+.export-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #1e293b;
+}
+
+.hyper-grid-theme-dark .export-title {
+  color: #f1f5f9;
+}
+
+.export-count {
+  font-size: 13px;
+  color: #2563eb;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.hyper-grid-theme-dark .export-count {
+  color: #38bdf8;
+}
+
+.export-progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.hyper-grid-theme-dark .export-progress-bar {
+  background-color: #334155;
+}
+
+.export-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+  transition: width 0.1s ease;
+}
+
+.export-hint {
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.hyper-grid-theme-dark .export-hint {
+  color: #94a3b8;
+}

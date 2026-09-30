@@ -1,0 +1,18 @@
+[package]
+name = "novagrid_wasm_core"
+version = "0.1.0"
+edition = "2021"
+description = "Unified Rust + WebAssembly engine for 2D Grid Virtualization, High-Ratio DEFLATE Compression, and Fast Sorting"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+miniz_oxide = "0.8"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

@@ -1,0 +1,21 @@
+{
+  "name": "canvas-grid-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Unified 100M+ Rows Canvas Grid with Rust WebAssembly and OPFS Storage",
+  "workspaces": [
+    "core",
+    "vue",
+    "playground"
+  ],
+  "keywords": [
+    "canvas",
+    "grid",
+    "wasm",
+    "opfs",
+    "virtualization",
+    "rust"
+  ],
+  "author": "",
+  "license": "MIT"
+}

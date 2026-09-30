@@ -1,0 +1,21 @@
+[package]
+name = "wasm-virtual-core"
+version = "0.1.0"
+edition = "2021"
+description = "Ultra-lightweight, high-performance 2D Grid, Tree, and List virtual scrolling engine in WebAssembly"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+
+[profile.release]
+opt-level = "z"        # Optimize aggressively for binary size
+lto = true             # Link-Time Optimization
+codegen-units = 1      # Maximize optimizations across all crates
+panic = "abort"        # Eliminate stack unwinding tables and formatting code
+strip = true           # Automatically strip symbols and debuginfo
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-Oz", "--strip-debug", "--strip-producers", "--enable-bulk-memory", "--enable-nontrapping-float-to-int"]

@@ -1,0 +1,40 @@
+{
+  "name": "yz-grid",
+  "version": "1.0.0",
+  "description": "Enterprise-grade Ultra Data Grid powered by Rust WebAssembly. Pure TypeScript Core with Vue 3 / Framework wrappers.",
+  "type": "module",
+  "main": "./dist/yz-grid.umd.cjs",
+  "module": "./dist/yz-grid.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/yz-grid.js",
+      "require": "./dist/yz-grid.umd.cjs"
+    },
+    "./style.css": "./dist/yz-grid.css",
+    "./dist/yz-grid.css": "./dist/yz-grid.css"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run build:lib && vue-tsc --noEmit",
+    "build:lib": "vite build --mode lib",
+    "build:demo": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.5.13",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0",
+    "vite-plugin-dts": "^4.5.0",
+    "vue-tsc": "^2.2.0"
+  }
+}
